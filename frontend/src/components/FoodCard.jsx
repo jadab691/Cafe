@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 
 function FoodCard({ food }) {
@@ -12,6 +11,12 @@ function FoodCard({ food }) {
           loading="lazy"
           className="h-52 w-full object-cover transition duration-500 group-hover:scale-105"
         />
+
+        {food.popular && (
+          <span className="absolute left-3 top-3 rounded-full bg-orange-500 px-3 py-1 text-xs font-bold text-white shadow">
+            Popular
+          </span>
+        )}
       </div>
 
       {/* Food Details */}
@@ -28,6 +33,47 @@ function FoodCard({ food }) {
           {food.description}
         </p>
 
+        {/* Additional Food Information */}
+        <div className="mt-4 space-y-3 rounded-xl bg-orange-50/70 p-3">
+          {food.ingredients && (
+            <div>
+              <p className="text-xs font-bold uppercase tracking-wide text-gray-700">
+                Ingredients
+              </p>
+
+              <p className="mt-1 text-sm leading-5 text-gray-600">
+                {food.ingredients.join(", ")}
+              </p>
+            </div>
+          )}
+
+          <div className="grid grid-cols-2 gap-3">
+            {food.preparationTime && (
+              <div>
+                <p className="text-xs font-bold text-gray-700">
+                  Preparation
+                </p>
+
+                <p className="mt-1 text-sm text-gray-600">
+                  {food.preparationTime}
+                </p>
+              </div>
+            )}
+
+            {food.serving && (
+              <div>
+                <p className="text-xs font-bold text-gray-700">
+                  Serving Size
+                </p>
+
+                <p className="mt-1 text-sm text-gray-600">
+                  {food.serving}
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+
         {/* Price and Button */}
         <div className="mt-4 flex items-center justify-between border-t border-gray-100 pt-4">
           <span className="text-xl font-extrabold text-gray-900">
@@ -36,6 +82,7 @@ function FoodCard({ food }) {
 
           <Link
             to={`/food/${food.id}`}
+            state={{ food }}
             className="rounded-full bg-orange-500 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-orange-600"
           >
             View Details →
