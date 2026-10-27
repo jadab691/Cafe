@@ -4,7 +4,8 @@ import { Link } from "react-router-dom";
 function FoodCard({ food }) {
   return (
     <div className="group overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl">
-      {/* Food Image */}
+ 
+      {/* food er chobi   */}
       <div className="relative overflow-hidden">
         <img
           src={food.image}
@@ -14,7 +15,7 @@ function FoodCard({ food }) {
         />
       </div>
 
-      {/* Food Details */}
+      {/* food er detail */}
       <div className="p-5">
         <p className="text-xs font-semibold uppercase tracking-wider text-orange-500">
           {food.category}
@@ -28,7 +29,7 @@ function FoodCard({ food }) {
           {food.description}
         </p>
 
-        {/* Price and Button */}
+        {/* price and button */}
         <div className="mt-4 flex items-center justify-between border-t border-gray-100 pt-4">
           <span className="text-xl font-extrabold text-gray-900">
             ৳{food.price}
