@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -33,22 +34,38 @@ export default function Login() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error("Login failed");
+        throw new Error(
+          data.message || data.error || "Login failed"
+        );
       }
 
       localStorage.setItem("customerToken", data.token);
-      localStorage.setItem("customer", JSON.stringify(data.customer));
+      localStorage.setItem(
+        "customer",
+        JSON.stringify(data.customer)
+      );
 
       navigate("/");
     } catch (err) {
-      setError(err.message || "Could not connect to the server");
+      setError(
+        err.message || "Could not connect to the server"
+      );
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <main className="relative isolate overflow-hidden bg-[#fffaf3] px-4 py-12 sm:px-8 sm:py-16 lg:py-20">
+    <main className="relative isolate min-h-screen overflow-hidden bg-[#fffaf3] px-4 py-12 sm:px-8 sm:py-16 lg:py-20">
+
+      {/* Back to Home */}
+      <Link
+        to="/"
+        className="fixed left-4 top-4 z-50 inline-flex items-center gap-2 rounded-full border border-orange-100 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-md transition hover:border-orange-500 hover:bg-orange-500 hover:text-white sm:left-6 sm:top-6"
+      >
+        <span aria-hidden="true">←</span>
+        Back to Home
+      </Link>
 
       {/* Soft decorative background */}
       <div
@@ -61,7 +78,7 @@ export default function Login() {
         className="pointer-events-none absolute -right-24 bottom-0 -z-10 h-96 w-96 rounded-full bg-rose-100/70 blur-3xl"
       />
 
-      <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2 lg:gap-20">
+      <div className="mx-auto grid max-w-6xl items-center gap-12 pt-8 lg:grid-cols-2 lg:gap-20 lg:pt-0">
 
         {/* Left: Food Editorial Section */}
         <section className="relative mx-auto w-full max-w-lg">
@@ -211,15 +228,19 @@ export default function Login() {
                 disabled={loading}
                 className="w-full rounded-xl bg-orange-500 px-5 py-3.5 font-bold text-white shadow-lg shadow-orange-200 transition duration-200 hover:-translate-y-0.5 hover:bg-orange-600 hover:shadow-orange-300 disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {loading ? "Logging in..." : "Login to Your Account →"}
+                {loading
+                  ? "Logging in..."
+                  : "Login to Your Account →"}
               </button>
             </form>
 
             <div className="my-6 flex items-center gap-3">
               <div className="h-px flex-1 bg-slate-100" />
+
               <span className="text-xs font-medium text-slate-400">
                 GOOD FOOD AWAITS
               </span>
+
               <div className="h-px flex-1 bg-slate-100" />
             </div>
 
@@ -232,14 +253,12 @@ export default function Login() {
                 Sign Up
               </Link>
             </p>
-
           </div>
 
           <p className="mt-5 text-center text-xs text-slate-400">
             Made for food lovers, by Cafe.
           </p>
         </section>
-
       </div>
     </main>
   );

@@ -1,3 +1,4 @@
+
 import { Link, useLocation, useParams } from "react-router-dom";
 
 export default function FoodDetails() {
@@ -19,10 +20,10 @@ export default function FoodDetails() {
           </p>
 
           <Link
-            to="/#popular"
+            to="/menu"
             className="mt-6 inline-block rounded-full bg-orange-500 px-6 py-3 font-bold text-white hover:bg-orange-600"
           >
-            Back to Menu
+            ← Back to Menu
           </Link>
         </div>
       </main>
@@ -33,7 +34,7 @@ export default function FoodDetails() {
     <main className="min-h-screen bg-[#fffdf8] px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl">
         <Link
-          to="/#popular"
+          to="/menu"
           className="mb-8 inline-block font-semibold text-orange-600 hover:text-orange-700"
         >
           ← Back to Menu
@@ -112,8 +113,15 @@ export default function FoodDetails() {
             </div>
 
             <p className="mt-5 text-sm text-gray-500">
-              Select this item from the menu to return to the food list.
+              Explore more delicious items from our menu.
             </p>
+
+            <Link
+              to="/menu"
+              className="mt-5 inline-block rounded-xl bg-orange-500 px-6 py-3 font-bold text-white transition hover:bg-orange-600"
+            >
+              Explore More Food
+            </Link>
           </div>
         </div>
       </div>
