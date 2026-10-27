@@ -16,6 +16,7 @@ import FoodDetails from "./pages/public/FoodDetails";
 
 import CustomerSignup from "./pages/customer/CustomerSignup";
 import CustomerLogin from "./pages/customer/CustomerLogin";
+import CustomerProfile from "./pages/customer/CustomerProfile";
 
 function About() {
   return (
@@ -66,6 +67,11 @@ function AppContent() {
         <Route
           path="/customer/login"
           element={<CustomerLogin />}
+        />
+
+        <Route
+          path="/customer/profile"
+          element={<CustomerProfile />}
         />
 
         {/* Food details */}

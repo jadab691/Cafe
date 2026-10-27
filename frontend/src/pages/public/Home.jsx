@@ -2,6 +2,21 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import FoodCard from "../../components/FoodCard";
 
+const CART_KEY = "cafe-cart";
+
+function hasCustomerSession() {
+  if (!localStorage.getItem("customerToken")) return false;
+
+  try {
+    const customer = JSON.parse(
+      localStorage.getItem("customer") || "null"
+    );
+    return Boolean(customer?.name);
+  } catch {
+    return false;
+  }
+}
+
 const categories = [
   "All",
   "Burgers",
@@ -133,11 +148,58 @@ const foods = [
 
 function Home() {
   const [activeCategory, setActiveCategory] = useState("All");
+  const [notice, setNotice] = useState("");
+  const [noticeType, setNoticeType] = useState("success");
 
   const filteredFoods =
     activeCategory === "All"
       ? foods
       : foods.filter((food) => food.category === activeCategory);
+
+  function addToCart(food) {
+    if (!hasCustomerSession()) {
+      setNoticeType("error");
+      setNotice("Please log in to add items to your cart.");
+      window.setTimeout(() => setNotice(""), 4000);
+      return;
+    }
+
+    let cartItems = [];
+    try {
+      const savedCart = JSON.parse(
+        localStorage.getItem(CART_KEY) || "[]"
+      );
+      if (Array.isArray(savedCart)) cartItems = savedCart;
+    } catch {
+      cartItems = [];
+    }
+
+    const existingItem = cartItems.find(
+      (item) => String(item.id) === String(food.id)
+    );
+    const updatedCart = existingItem
+      ? cartItems.map((item) =>
+          String(item.id) === String(food.id)
+            ? { ...item, quantity: Number(item.quantity || 1) + 1 }
+            : item
+        )
+      : [
+          ...cartItems,
+          {
+            id: food.id,
+            name: food.name,
+            category: food.category,
+            price: food.price,
+            image: food.image,
+            quantity: 1,
+          },
+        ];
+
+    localStorage.setItem(CART_KEY, JSON.stringify(updatedCart));
+    setNoticeType("success");
+    setNotice(`${food.name} added to cart`);
+    window.setTimeout(() => setNotice(""), 2200);
+  }
 
   return (
     <main className="min-h-screen overflow-hidden bg-[#fffdf8] text-gray-900">
@@ -315,7 +377,11 @@ function Home() {
         {/* Reusable Food Cards */}
         <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {filteredFoods.map((food) => (
-            <FoodCard key={food.id} food={food} />
+            <FoodCard
+              key={food.id}
+              food={food}
+              onAddToCart={addToCart}
+            />
           ))}
         </div>
 
@@ -329,6 +395,25 @@ function Home() {
           </Link>
         </div>
       </section>
+
+      {notice && (
+        <div
+          role={noticeType === "error" ? "alert" : "status"}
+          className={`fixed left-1/2 top-20 z-[70] flex -translate-x-1/2 items-center gap-3 rounded-xl px-5 py-3 text-sm font-medium text-white shadow-xl ${
+            noticeType === "error" ? "bg-rose-700" : "bg-slate-900"
+          }`}
+        >
+          <span>{noticeType === "success" && "✓"} {notice}</span>
+          {noticeType === "error" && (
+            <Link
+              to="/customer/login"
+              className="font-bold underline underline-offset-2"
+            >
+              Log in
+            </Link>
+          )}
+        </div>
+      )}
     </main>
   );
 }

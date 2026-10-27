@@ -1,8 +1,28 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
+
+function getStoredCustomer() {
+  const storedCustomer = localStorage.getItem("customer");
+
+  if (!storedCustomer) return null;
+
+  try {
+    return JSON.parse(storedCustomer);
+  } catch {
+    return null;
+  }
+}
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [customer, setCustomer] = useState(getStoredCustomer);
+
+  useEffect(() => {
+    const syncCustomer = () => setCustomer(getStoredCustomer());
+    window.addEventListener("storage", syncCustomer);
+
+    return () => window.removeEventListener("storage", syncCustomer);
+  }, []);
 
   const links = [
     { name: "Home", path: "/" },
@@ -16,6 +36,11 @@ export default function Navbar() {
     }`;
 
   const closeMenu = () => setMenuOpen(false);
+
+  const firstName = customer?.name?.trim().split(/\s+/)[0];
+  const isLoggedIn = Boolean(
+    localStorage.getItem("customerToken") && firstName
+  );
 
   return (
     <header className="sticky top-0 z-50 border-b bg-white/95 shadow-sm backdrop-blur">
@@ -52,20 +77,31 @@ export default function Navbar() {
             ⌕
           </Link>
 
-          <Link
-            to="/cart"
-            aria-label="Shopping cart"
-            className="relative text-xl hover:text-orange-600"
-          >
-            🛒
-          </Link>
+          {isLoggedIn && (
+            <Link
+              to="/cart"
+              aria-label="Shopping cart"
+              className="relative text-xl hover:text-orange-600"
+            >
+              🛒
+            </Link>
+          )}
 
-          <Link
-            to="/customer/login"
-            className="rounded-lg bg-orange-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-orange-600"
-          >
-            Login
-          </Link>
+          {isLoggedIn ? (
+            <Link
+              to="/customer/profile"
+              className="rounded-lg bg-orange-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-orange-600"
+            >
+              {firstName}
+            </Link>
+          ) : (
+            <Link
+              to="/customer/login"
+              className="rounded-lg bg-orange-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-orange-600"
+            >
+              Login
+            </Link>
+          )}
         </div>
 
         <button
@@ -97,22 +133,34 @@ export default function Navbar() {
             </NavLink>
           ))}
 
-          <Link
-            to="/cart"
-            onClick={closeMenu}
-            className="block text-sm text-gray-600"
-          >
-            Shopping Cart
-          </Link>
+          {isLoggedIn && (
+            <Link
+              to="/cart"
+              onClick={closeMenu}
+              className="block text-sm text-gray-600"
+            >
+              Shopping Cart
+            </Link>
+          )}
 
           <div className="flex gap-3">
-            <Link
-              to="/customer/login"
-              onClick={closeMenu}
-              className="flex-1 rounded-lg bg-orange-500 px-4 py-2 text-center text-sm font-semibold text-white hover:bg-orange-600"
-            >
-              Login
-            </Link>
+            {isLoggedIn ? (
+              <Link
+                to="/customer/profile"
+                onClick={closeMenu}
+                className="flex-1 rounded-lg bg-orange-500 px-4 py-2 text-center text-sm font-semibold text-white hover:bg-orange-600"
+              >
+                {firstName}
+              </Link>
+            ) : (
+              <Link
+                to="/customer/login"
+                onClick={closeMenu}
+                className="flex-1 rounded-lg bg-orange-500 px-4 py-2 text-center text-sm font-semibold text-white hover:bg-orange-600"
+              >
+                Login
+              </Link>
+            )}
           </div>
         </div>
       )}
