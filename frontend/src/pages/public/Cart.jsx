@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import {
   ShoppingCart,
   Plus,
@@ -23,11 +23,25 @@ function getSavedCart() {
   }
 }
 
+function hasCustomerSession() {
+  if (!localStorage.getItem("customerToken")) return false;
+
+  try {
+    const customer = JSON.parse(
+      localStorage.getItem("customer") || "null"
+    );
+    return Boolean(customer?.name);
+  } catch {
+    return false;
+  }
+}
+
 function formatPrice(price) {
   return `৳${Number(price || 0).toLocaleString("en-BD")}`;
 }
 
 export default function Cart() {
+  const isLoggedIn = hasCustomerSession();
   const [cartItems, setCartItems] = useState(getSavedCart);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [orderPlaced, setOrderPlaced] = useState(false);
@@ -45,6 +59,10 @@ export default function Cart() {
       JSON.stringify(cartItems)
     );
   }, [cartItems]);
+
+  if (!isLoggedIn) {
+    return <Navigate to="/customer/login" replace />;
+  }
 
   const totalItems = cartItems.reduce(
     (sum, item) => sum + Number(item.quantity || 1),

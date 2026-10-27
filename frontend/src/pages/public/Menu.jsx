@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Search,
   ShoppingCart,
@@ -214,6 +214,19 @@ function readCart() {
   }
 }
 
+function hasCustomerSession() {
+  if (!localStorage.getItem("customerToken")) return false;
+
+  try {
+    const customer = JSON.parse(
+      localStorage.getItem("customer") || "null"
+    );
+    return Boolean(customer?.name);
+  } catch {
+    return false;
+  }
+}
+
 function formatPrice(price) {
   return `৳${Number(price).toLocaleString("en-BD")}`;
 }
@@ -228,6 +241,8 @@ export default function Menu() {
   const [selectedFood, setSelectedFood] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [notice, setNotice] = useState("");
+  const [noticeType, setNoticeType] = useState("success");
+  const isLoggedIn = hasCustomerSession();
 
   // Keep cart information saved in localStorage.
   useEffect(() => {
@@ -276,6 +291,16 @@ export default function Menu() {
   }, [search, category, sortBy]);
 
   function addToCart(food, amount = 1) {
+    if (!hasCustomerSession()) {
+      setNoticeType("error");
+      setNotice("Please log in to add items to your cart.");
+
+      window.setTimeout(() => {
+        setNotice("");
+      }, 4000);
+      return;
+    }
+
     setCartItems((currentItems) => {
       const existingItem = currentItems.find(
         (item) => String(item.id) === String(food.id)
@@ -316,6 +341,7 @@ export default function Menu() {
       return updatedItems;
     });
 
+    setNoticeType("success");
     setNotice(`${food.name} added to cart`);
 
     window.setTimeout(() => {
@@ -529,29 +555,41 @@ export default function Menu() {
       {/* Toast notification */}
       {notice && (
         <div
-          role="status"
-          className="fixed left-1/2 top-20 z-[70] -translate-x-1/2 rounded-xl bg-slate-900 px-5 py-3 text-sm font-medium text-white shadow-xl"
+          role={noticeType === "error" ? "alert" : "status"}
+          className={`fixed left-1/2 top-20 z-[70] flex -translate-x-1/2 items-center gap-3 rounded-xl px-5 py-3 text-sm font-medium text-white shadow-xl ${
+            noticeType === "error" ? "bg-rose-700" : "bg-slate-900"
+          }`}
         >
-          ✓ {notice}
+          <span>{noticeType === "success" && "✓"} {notice}</span>
+          {noticeType === "error" && (
+            <Link
+              to="/customer/login"
+              className="font-bold underline underline-offset-2"
+            >
+              Log in
+            </Link>
+          )}
         </div>
       )}
 
       {/* Floating cart button */}
-      <button
-        type="button"
-        onClick={() => navigate("/cart")}
-        aria-label={`Open shopping cart. ${cartCount} items`}
-        title="Open Cart"
-        className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-orange-500 text-white shadow-xl transition hover:scale-105 hover:bg-orange-600"
-      >
-        <ShoppingCart size={24} />
+      {isLoggedIn && (
+        <button
+          type="button"
+          onClick={() => navigate("/cart")}
+          aria-label={`Open shopping cart. ${cartCount} items`}
+          title="Open Cart"
+          className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-orange-500 text-white shadow-xl transition hover:scale-105 hover:bg-orange-600"
+        >
+          <ShoppingCart size={24} />
 
-        {cartCount > 0 && (
-          <span className="absolute -right-1 -top-1 flex h-6 min-w-6 items-center justify-center rounded-full border-2 border-white bg-slate-900 px-1 text-xs font-bold text-white">
-            {cartCount > 99 ? "99+" : cartCount}
-          </span>
-        )}
-      </button>
+          {cartCount > 0 && (
+            <span className="absolute -right-1 -top-1 flex h-6 min-w-6 items-center justify-center rounded-full border-2 border-white bg-slate-900 px-1 text-xs font-bold text-white">
+              {cartCount > 99 ? "99+" : cartCount}
+            </span>
+          )}
+        </button>
+      )}
 
       {/* Food details modal */}
       {selectedFood && (
