@@ -6,10 +6,10 @@ const Footer = () => {
 
     return (
         <footer className="mt-16 bg-yellow-100 text-gray-300">
-            {/* Main Footer */}
+            
             <div className="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-4 py-12 sm:px-6 md:grid-cols-2 lg:grid-cols-4 lg:px-8 lg:py-16">
 
-                {/* Brand */}
+
                 <div>
                     <Link to="/" className="inline-flex items-center gap-2">
                         <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-orange-500 text-xl font-bold text-white">
@@ -88,7 +88,6 @@ const Footer = () => {
                     </ul>
                 </div>
 
-                {/* Customer Support */}
                 <div>
                     <h3 className="mb-5 text-lg font-semibold text-gray-900">
                         Customer Support
@@ -129,7 +128,6 @@ const Footer = () => {
                     </ul>
                 </div>
 
-                {/* Contact Information */}
                 <div>
                     <h3 className="mb-5 text-lg font-semibold text-gray-900">
                         Get in Touch
@@ -161,7 +159,6 @@ const Footer = () => {
                 </div>
             </div>
 
-            {/* Bottom Bar */}
             <div className="border-t border-gray-800">
                 <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-4 py-5 text-center text-xs text-gray-500 sm:px-6 md:flex-row lg:px-8">
                     <p>

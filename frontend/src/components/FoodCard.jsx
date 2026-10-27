@@ -1,49 +1,69 @@
 
-import { Link } from "react-router-dom";
+import { Plus, Leaf } from "lucide-react";
 
-function FoodCard({ food }) {
+export default function FoodCard({ food, onAddToCart, onViewDetails }) {
   return (
-    <div className="group overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl">
-      {/* Food Image */}
-      <div className="relative overflow-hidden">
-        <img
-          src={food.image}
-          alt={food.name}
-          loading="lazy"
-          className="h-52 w-full object-cover transition duration-500 group-hover:scale-105"
-        />
-      </div>
+    <article
+      id={`food-${food.id}`}
+      className="flex items-center justify-between gap-4 border-b border-gray-200 py-6 sm:gap-6"
+    >
+      <div className="min-w-0 flex-1">
+        <button
+          type="button"
+          onClick={() => onViewDetails(food)}
+          className="text-left text-lg font-bold text-gray-800 transition hover:text-orange-600 sm:text-2xl"
+        >
+          {food.name}
+        </button>
 
-      {/* Food Details */}
-      <div className="p-5">
-        <p className="text-xs font-semibold uppercase tracking-wider text-orange-500">
-          {food.category}
+        <p className="mt-2 text-lg text-gray-800 sm:text-xl">
+          Tk {food.price}
         </p>
 
-        <h3 className="mt-2 text-lg font-bold text-gray-900">
-          {food.name}
-        </h3>
-
-        <p className="mt-2 min-h-12 text-sm leading-6 text-gray-500">
+        <p className="mt-3 text-sm leading-6 text-gray-500 sm:text-base sm:leading-7">
           {food.description}
         </p>
 
-        {/* Price and Button */}
-        <div className="mt-4 flex items-center justify-between border-t border-gray-100 pt-4">
-          <span className="text-xl font-extrabold text-gray-900">
-            ৳{food.price}
-          </span>
-
-          <Link
-            to={`/food/${food.id}`}
-            className="rounded-full bg-orange-500 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-orange-600"
+        {food.category === "Snacks" && (
+          <div
+            title="Snack item"
+            className="mt-3 flex h-10 w-10 items-center justify-center rounded-full bg-emerald-50"
           >
-            View Details →
-          </Link>
-        </div>
+            <Leaf size={21} className="text-emerald-700" />
+          </div>
+        )}
+
+        {food.badge && (
+          <span className="mt-3 inline-block rounded-full bg-orange-50 px-3 py-1 text-xs font-semibold text-orange-600">
+            {food.badge}
+          </span>
+        )}
       </div>
-    </div>
+
+      <div className="relative h-28 w-28 shrink-0 sm:h-36 sm:w-36">
+        <button
+          type="button"
+          onClick={() => onViewDetails(food)}
+          className="h-full w-full overflow-hidden rounded-2xl border border-gray-200 bg-gray-100"
+          aria-label={`View ${food.name} details`}
+        >
+          <img
+            src={food.image}
+            alt={food.name}
+            loading="lazy"
+            className="h-full w-full object-cover transition duration-300 hover:scale-105"
+          />
+        </button>
+
+        <button
+          type="button"
+          onClick={() => onAddToCart(food)}
+          aria-label={`Add ${food.name} to cart`}
+          className="absolute -bottom-1 -right-1 flex h-12 w-12 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-800 shadow-md transition hover:scale-105 hover:bg-orange-500 hover:text-white"
+        >
+          <Plus size={27} strokeWidth={1.7} />
+        </button>
+      </div>
+    </article>
   );
 }
-
-export default FoodCard;
