@@ -1,3 +1,4 @@
+
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -10,204 +11,12 @@ import {
   Clock,
 } from "lucide-react";
 
+const API_URL = "http://localhost:3000/api/foods";
 const CART_KEY = "cafe-cart";
-
-const foods = [
-  {
-    id: "1",
-    name: "Signature Beef Burger",
-    category: "Burgers",
-    price: 450,
-    rating: 4.9,
-    reviews: 128,
-    time: "15-20 min",
-    badge: "Bestseller",
-    description:
-      "A premium grilled beef patty layered with cheddar cheese, fresh lettuce, caramelized onions and our signature house sauce.",
-    image:
-      "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=900",
-    ingredients: [
-      "Premium beef patty",
-      "Cheddar cheese",
-      "Fresh lettuce",
-      "Caramelized onions",
-      "Signature burger sauce",
-      "Brioche bun",
-    ],
-  },
-  {
-    id: "2",
-    name: "Truffle Mushroom Pizza",
-    category: "Pizza",
-    price: 680,
-    rating: 4.8,
-    reviews: 96,
-    time: "20-25 min",
-    badge: "Chef's Choice",
-    description:
-      "Hand-stretched pizza topped with roasted mushrooms, mozzarella, aromatic herbs and a rich truffle-inspired sauce.",
-    image:
-      "https://images.unsplash.com/photo-1579751626657-72bc17010498?w=900",
-    ingredients: [
-      "Hand-stretched pizza dough",
-      "Mozzarella cheese",
-      "Roasted mushrooms",
-      "Herbs",
-      "Creamy truffle-style sauce",
-    ],
-  },
-  {
-    id: "3",
-    name: "Caramel Iced Latte",
-    category: "Coffee",
-    price: 260,
-    rating: 4.9,
-    reviews: 154,
-    time: "5-10 min",
-    badge: "Popular",
-    description:
-      "Double espresso blended with chilled milk, smooth caramel and ice for a refreshing cafe favorite.",
-    image:
-      "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=900",
-    ingredients: [
-      "Double espresso",
-      "Fresh milk",
-      "Caramel syrup",
-      "Ice",
-    ],
-  },
-  {
-    id: "4",
-    name: "Chocolate Fudge Cake",
-    category: "Desserts",
-    price: 290,
-    rating: 4.8,
-    reviews: 82,
-    time: "5 min",
-    badge: "Sweet Pick",
-    description:
-      "Rich chocolate sponge with silky chocolate ganache and a soft, fudgy center.",
-    image:
-      "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=900",
-    ingredients: [
-      "Chocolate sponge",
-      "Chocolate ganache",
-      "Cocoa",
-      "Cream",
-    ],
-  },
-  {
-    id: "5",
-    name: "Creamy Alfredo Pasta",
-    category: "Pasta",
-    price: 520,
-    rating: 4.7,
-    reviews: 73,
-    time: "15-20 min",
-    badge: "Chef's Choice",
-    description:
-      "Tender pasta tossed in a creamy Alfredo sauce with parmesan, garlic and freshly cracked black pepper.",
-    image:
-      "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=900",
-    ingredients: [
-      "Pasta",
-      "Creamy Alfredo sauce",
-      "Parmesan",
-      "Garlic",
-      "Black pepper",
-    ],
-  },
-  {
-    id: "6",
-    name: "Crispy Golden Fries",
-    category: "Snacks",
-    price: 180,
-    rating: 4.6,
-    reviews: 65,
-    time: "8-10 min",
-    description:
-      "Golden, crispy potato fries seasoned with our special spice blend and served hot.",
-    image:
-      "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=900",
-    ingredients: [
-      "Potatoes",
-      "Sea salt",
-      "House seasoning",
-    ],
-  },
-  {
-    id: "7",
-    name: "Classic Cappuccino",
-    category: "Coffee",
-    price: 220,
-    rating: 4.8,
-    reviews: 91,
-    time: "5-8 min",
-    description:
-      "Rich espresso topped with steamed milk and a velvety layer of milk foam.",
-    image:
-      "https://images.unsplash.com/photo-1534778101976-62847782c213?w=900",
-    ingredients: [
-      "Espresso",
-      "Steamed milk",
-      "Milk foam",
-    ],
-  },
-  {
-    id: "8",
-    name: "Classic Margherita",
-    category: "Pizza",
-    price: 490,
-    rating: 4.7,
-    reviews: 58,
-    time: "18-22 min",
-    description:
-      "A classic pizza with tomato sauce, melted mozzarella, fresh basil and a crisp golden crust.",
-    image:
-      "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=900",
-    ingredients: [
-      "Pizza dough",
-      "Tomato sauce",
-      "Mozzarella",
-      "Fresh basil",
-    ],
-  },
-  {
-    id: "9",
-    name: "Red Velvet Cake",
-    category: "Desserts",
-    price: 320,
-    rating: 4.8,
-    reviews: 47,
-    time: "5 min",
-    description:
-      "Soft red velvet sponge layered with smooth cream cheese frosting.",
-    image:
-      "https://images.unsplash.com/photo-1586985289688-ca3cf47d3e6e?w=900",
-    ingredients: [
-      "Red velvet sponge",
-      "Cream cheese frosting",
-      "Vanilla",
-    ],
-  },
-];
-
-const categories = [
-  "All",
-  "Coffee",
-  "Burgers",
-  "Pizza",
-  "Pasta",
-  "Snacks",
-  "Desserts",
-];
 
 function readCart() {
   try {
-    const saved = JSON.parse(
-      localStorage.getItem(CART_KEY) || "[]"
-    );
-
+    const saved = JSON.parse(localStorage.getItem(CART_KEY) || "[]");
     return Array.isArray(saved) ? saved : [];
   } catch {
     return [];
@@ -234,6 +43,12 @@ function formatPrice(price) {
 export default function Menu() {
   const navigate = useNavigate();
 
+  // Foods from MongoDB
+  const [foods, setFoods] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  // Menu states
   const [cartItems, setCartItems] = useState(readCart);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
@@ -242,22 +57,64 @@ export default function Menu() {
   const [quantity, setQuantity] = useState(1);
   const [notice, setNotice] = useState("");
   const [noticeType, setNoticeType] = useState("success");
+
   const isLoggedIn = hasCustomerSession();
 
-  // Keep cart information saved in localStorage.
+  // Fetch foods from MongoDB
   useEffect(() => {
-    localStorage.setItem(
-      CART_KEY,
-      JSON.stringify(cartItems)
-    );
+    const fetchFoods = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const response = await fetch(API_URL);
+
+        if (!response.ok) {
+          throw new Error("Failed to load foods.");
+        }
+
+        const data = await response.json();
+
+        const formattedFoods = (data.foods || []).map((food) => ({
+          ...food,
+          id: food._id,
+          rating: Number(food.rating || 0),
+          reviews: Number(food.reviews || 0),
+          price: Number(food.price || 0),
+          ingredients: food.ingredients || [],
+        }));
+
+        setFoods(formattedFoods);
+      } catch (error) {
+        setError(error.message || "Something went wrong.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFoods();
+  }, []);
+
+  // Save cart in localStorage
+  useEffect(() => {
+    localStorage.setItem(CART_KEY, JSON.stringify(cartItems));
   }, [cartItems]);
 
+  // Dynamic categories from MongoDB
+  const categories = useMemo(() => {
+    return [
+      "All",
+      ...new Set(foods.map((food) => food.category).filter(Boolean)),
+    ];
+  }, [foods]);
+
+  // Cart count
   const cartCount = cartItems.reduce(
-    (total, item) =>
-      total + Number(item.quantity || 1),
+    (total, item) => total + Number(item.quantity || 1),
     0
   );
 
+  // Search, category filter and sorting
   const filteredFoods = useMemo(() => {
     let result = foods.filter((food) => {
       const matchesCategory =
@@ -266,38 +123,31 @@ export default function Menu() {
       const query = search.trim().toLowerCase();
 
       const matchesSearch =
-        food.name.toLowerCase().includes(query) ||
-        food.category.toLowerCase().includes(query) ||
-        food.description.toLowerCase().includes(query);
+        food.name?.toLowerCase().includes(query) ||
+        food.category?.toLowerCase().includes(query) ||
+        food.description?.toLowerCase().includes(query);
 
       return matchesCategory && matchesSearch;
     });
 
     if (sortBy === "price-low") {
-      result = [...result].sort(
-        (a, b) => a.price - b.price
-      );
+      result = [...result].sort((a, b) => a.price - b.price);
     } else if (sortBy === "price-high") {
-      result = [...result].sort(
-        (a, b) => b.price - a.price
-      );
+      result = [...result].sort((a, b) => b.price - a.price);
     } else if (sortBy === "rating") {
-      result = [...result].sort(
-        (a, b) => b.rating - a.rating
-      );
+      result = [...result].sort((a, b) => b.rating - a.rating);
     }
 
     return result;
-  }, [search, category, sortBy]);
+  }, [foods, search, category, sortBy]);
 
+  // Add food to cart
   function addToCart(food, amount = 1) {
     if (!hasCustomerSession()) {
       setNoticeType("error");
       setNotice("Please log in to add items to your cart.");
 
-      window.setTimeout(() => {
-        setNotice("");
-      }, 4000);
+      window.setTimeout(() => setNotice(""), 4000);
       return;
     }
 
@@ -312,10 +162,9 @@ export default function Menu() {
         updatedItems = currentItems.map((item) =>
           String(item.id) === String(food.id)
             ? {
-                ...item,
-                quantity:
-                  Number(item.quantity || 1) + amount,
-              }
+              ...item,
+              quantity: Number(item.quantity || 1) + amount,
+            }
             : item
         );
       } else {
@@ -332,11 +181,7 @@ export default function Menu() {
         ];
       }
 
-      // Save immediately so the Cart page can read it.
-      localStorage.setItem(
-        CART_KEY,
-        JSON.stringify(updatedItems)
-      );
+      localStorage.setItem(CART_KEY, JSON.stringify(updatedItems));
 
       return updatedItems;
     });
@@ -344,11 +189,10 @@ export default function Menu() {
     setNoticeType("success");
     setNotice(`${food.name} added to cart`);
 
-    window.setTimeout(() => {
-      setNotice("");
-    }, 2200);
+    window.setTimeout(() => setNotice(""), 2200);
   }
 
+  // Food details modal
   function openDetails(food) {
     setSelectedFood(food);
     setQuantity(1);
@@ -369,6 +213,7 @@ export default function Menu() {
   return (
     <main className="min-h-screen bg-white pb-24 text-slate-900">
       <div className="mx-auto max-w-5xl px-5 py-10 sm:px-8">
+
         {/* Page heading */}
         <div className="mb-8 flex items-center justify-between gap-4">
           <div>
@@ -419,11 +264,10 @@ export default function Menu() {
               type="button"
               key={item}
               onClick={() => setCategory(item)}
-              className={`rounded-full px-4 py-2 text-sm font-medium transition ${
-                category === item
+              className={`rounded-full px-4 py-2 text-sm font-medium transition ${category === item
                   ? "bg-orange-500 text-white"
                   : "bg-orange-50 text-slate-700 hover:bg-orange-100"
-              }`}
+                }`}
             >
               {item}
             </button>
@@ -447,11 +291,25 @@ export default function Menu() {
 
         {/* Food list */}
         <section>
-          {filteredFoods.length === 0 ? (
+          {loading ? (
+            <p className="py-10 text-center text-slate-500">
+              Loading foods...
+            </p>
+          ) : error ? (
+            <div className="py-10 text-center">
+              <p className="text-red-600">{error}</p>
+
+              <button
+                type="button"
+                onClick={() => window.location.reload()}
+                className="mt-3 rounded-lg bg-orange-500 px-4 py-2 text-white"
+              >
+                Try Again
+              </button>
+            </div>
+          ) : filteredFoods.length === 0 ? (
             <div className="rounded-2xl bg-slate-50 px-5 py-14 text-center">
-              <h2 className="text-xl font-bold">
-                No food found
-              </h2>
+              <h2 className="text-xl font-bold">No food found</h2>
 
               <p className="mt-2 text-sm text-slate-500">
                 Try another search or category.
@@ -495,7 +353,7 @@ export default function Menu() {
                   </p>
 
                   <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-slate-500">
-                    {food.rating && (
+                    {food.rating > 0 && (
                       <span className="flex items-center gap-1">
                         <Star
                           size={15}
@@ -556,11 +414,13 @@ export default function Menu() {
       {notice && (
         <div
           role={noticeType === "error" ? "alert" : "status"}
-          className={`fixed left-1/2 top-20 z-[70] flex -translate-x-1/2 items-center gap-3 rounded-xl px-5 py-3 text-sm font-medium text-white shadow-xl ${
-            noticeType === "error" ? "bg-rose-700" : "bg-slate-900"
-          }`}
+          className={`fixed left-1/2 top-20 z-[70] flex -translate-x-1/2 items-center gap-3 rounded-xl px-5 py-3 text-sm font-medium text-white shadow-xl ${noticeType === "error" ? "bg-rose-700" : "bg-slate-900"
+            }`}
         >
-          <span>{noticeType === "success" && "✓"} {notice}</span>
+          <span>
+            {noticeType === "success" && "✓"} {notice}
+          </span>
+
           {noticeType === "error" && (
             <Link
               to="/customer/login"
@@ -648,9 +508,7 @@ export default function Menu() {
                         key={ingredient}
                         className="text-sm text-slate-600"
                       >
-                        <span className="mr-2 text-orange-500">
-                          •
-                        </span>
+                        <span className="mr-2 text-orange-500">•</span>
                         {ingredient}
                       </li>
                     ))}
@@ -677,9 +535,7 @@ export default function Menu() {
 
                   <button
                     type="button"
-                    onClick={() =>
-                      setQuantity((value) => value + 1)
-                    }
+                    onClick={() => setQuantity((value) => value + 1)}
                     aria-label="Increase quantity"
                     className="p-3 hover:text-orange-600"
                   >

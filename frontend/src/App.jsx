@@ -18,6 +18,13 @@ import CustomerSignup from "./pages/customer/CustomerSignup";
 import CustomerLogin from "./pages/customer/CustomerLogin";
 import CustomerProfile from "./pages/customer/CustomerProfile";
 
+// Admin pages 
+import Dashboard from "./pages/admin/Dashboard";
+import ManageFoods from "./pages/admin/ManageFoods";
+
+
+
+
 function About() {
   return (
     <div className="p-8">
@@ -38,12 +45,12 @@ function AppContent() {
   }, [location.pathname]);
 
   const isAuthPage =
-    location.pathname === "/customer/signup" ||
-    location.pathname === "/customer/login";
+    location.pathname === "/customer/signup" || location.pathname === "/customer/login";
+  const isAdminPage = location.pathname.startsWith("/admin");
 
   return (
     <>
-      {!isAuthPage && <Navbar />}
+      {!isAuthPage && !isAdminPage && <Navbar />}
 
       <Routes>
         {/* Original Home page — unchanged */}
@@ -98,9 +105,14 @@ function AppContent() {
             </div>
           }
         />
+
+        {/* Admin ROutes */}
+        <Route path="/admin/dashboard" element={<Dashboard />} />
+        <Route path="/admin/manage-foods" element={<ManageFoods />} />
       </Routes>
 
-      {!isAuthPage && <Footer />}
+
+      {!isAuthPage && !isAdminPage && <Footer />}
     </>
   );
 }
