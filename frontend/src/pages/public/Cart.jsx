@@ -73,7 +73,7 @@ export default function Cart() {
     (sum, item) =>
       sum +
       Number(item.price || 0) *
-        Number(item.quantity || 1),
+      Number(item.quantity || 1),
     0
   );
 
@@ -299,7 +299,7 @@ export default function Cart() {
                       <p className="font-bold sm:text-right">
                         {formatPrice(
                           Number(item.price || 0) *
-                            Number(item.quantity || 1)
+                          Number(item.quantity || 1)
                         )}
                       </p>
                     </article>
