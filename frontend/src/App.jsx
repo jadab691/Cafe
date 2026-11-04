@@ -1,10 +1,5 @@
 import { useEffect } from "react";
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  useLocation,
-} from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -18,34 +13,28 @@ import CustomerSignup from "./pages/customer/CustomerSignup";
 import CustomerLogin from "./pages/customer/CustomerLogin";
 import CustomerProfile from "./pages/customer/CustomerProfile";
 
-// Admin pages 
 import Dashboard from "./pages/admin/Dashboard";
 import ManageFoods from "./pages/admin/ManageFoods";
-
-
-
+import AddFood from "./pages/admin/AddFood";
+import ManageOrders from "./pages/admin/ManageOrders";
+import ReviewNow from "./pages/admin/ReviewNow";
+import Staff from "./pages/admin/Staff";
+import Profile from "./pages/admin/Profile";
 
 function About() {
-  return (
-    <div className="p-8">
-      <h1 className="text-3xl font-bold">About Cafe</h1>
-    </div>
-  );
+  return <div className="p-8"><h1 className="text-3xl font-bold">About Cafe</h1></div>;
 }
 
 function AppContent() {
   const location = useLocation();
 
   useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: "auto",
-    });
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
   }, [location.pathname]);
 
   const isAuthPage =
-    location.pathname === "/customer/signup" || location.pathname === "/customer/login";
+    location.pathname === "/customer/signup" ||
+    location.pathname === "/customer/login";
   const isAdminPage = location.pathname.startsWith("/admin");
 
   return (
@@ -53,64 +42,37 @@ function AppContent() {
       {!isAuthPage && !isAdminPage && <Navbar />}
 
       <Routes>
-        {/* Original Home page — unchanged */}
+        {/* Public pages */}
         <Route path="/" element={<Home />} />
-
-        {/* Full menu page */}
         <Route path="/menu" element={<Menu />} />
-
-        {/* Shopping cart */}
         <Route path="/cart" element={<Cart />} />
-
-        {/* About page */}
         <Route path="/about" element={<About />} />
 
-        {/* Authentication pages */}
-        <Route
-          path="/customer/signup"
-          element={<CustomerSignup />}
-        />
+        {/* Customer pages */}
+        <Route path="/customer/signup" element={<CustomerSignup />} />
+        <Route path="/customer/login" element={<CustomerLogin />} />
+        <Route path="/customer/profile" element={<CustomerProfile />} />
+        <Route path="/food/:id" element={<FoodDetails />} />
 
-        <Route
-          path="/customer/login"
-          element={<CustomerLogin />}
-        />
-
-        <Route
-          path="/customer/profile"
-          element={<CustomerProfile />}
-        />
-
-        {/* Food details */}
-        <Route
-          path="/food/:id"
-          element={<FoodDetails />}
-        />
-
-        {/* Page not found */}
-        <Route
-          path="*"
-          element={
-            <div className="min-h-[50vh] p-10 text-center">
-              <h1 className="text-3xl font-bold">
-                404 - Page Not Found
-              </h1>
-
-              <a
-                href="/"
-                className="mt-4 inline-block text-orange-600 underline"
-              >
-                Back to Home
-              </a>
-            </div>
-          }
-        />
-
-        {/* Admin ROutes */}
+        {/* Admin pages - AdminLayout is included inside each page */}
         <Route path="/admin/dashboard" element={<Dashboard />} />
+        <Route path="/admin/orders" element={<ManageOrders />} />
+        <Route path="/admin/review-now" element={<ReviewNow />} />
         <Route path="/admin/manage-foods" element={<ManageFoods />} />
-      </Routes>
+        <Route path="/admin/add-food" element={<AddFood />} />
+        <Route path="/admin/staff" element={<Staff />} />
+        <Route path="/admin/profile" element={<Profile />} />
 
+        {/* Keep old route working */}
+        <Route path="/admin/manage-orders" element={<ManageOrders />} />
+
+        <Route path="*" element={
+          <div className="min-h-[50vh] p-10 text-center">
+            <h1 className="text-3xl font-bold">404 - Page Not Found</h1>
+            <a href="/" className="mt-4 inline-block text-orange-600 underline">Back to Home</a>
+          </div>
+        } />
+      </Routes>
 
       {!isAuthPage && !isAdminPage && <Footer />}
     </>
@@ -118,9 +80,5 @@ function AppContent() {
 }
 
 export default function App() {
-  return (
-    <BrowserRouter>
-      <AppContent />
-    </BrowserRouter>
-  );
+  return <BrowserRouter><AppContent /></BrowserRouter>;
 }
