@@ -5,9 +5,15 @@ import { demoOrders, Panel, SectionTitle, StatCard, StatusPill, PrimaryButton } 
 
 export default function Dashboard() {
   const pending = demoOrders.filter((o) => o.status === "Pending").length;
+  
   return (
     <AdminLayout>
-      <SectionTitle eyebrow="Menu operations" title="Admin Dashboard" description="Your kitchen overview at a glance." action={<span className="rounded-full bg-emerald-50 px-3 py-2 text-xs font-bold text-emerald-700">● Kitchen Online</span>} />
+      <SectionTitle 
+        eyebrow="Menu operations" 
+        title="Admin Dashboard" 
+        description="Your kitchen overview at a glance." 
+        action={<span className="rounded-full bg-emerald-50 px-3 py-2 text-xs font-bold text-emerald-700">● Kitchen Online</span>} 
+      />
 
       <Panel className="mb-5 border-orange-100 bg-gradient-to-r from-orange-50 to-white">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -44,12 +50,13 @@ export default function Dashboard() {
             ))}
           </div>
         </Panel>
+        
         <Panel title="Quick Actions">
           <div className="grid grid-cols-2 gap-3">
             <Link to="/admin/add-food" className="rounded-xl border border-orange-100 bg-orange-50 p-4 text-sm font-bold text-orange-800 hover:bg-orange-100">＋ Add Food</Link>
             <Link to="/admin/orders" className="rounded-xl border border-slate-100 p-4 text-sm font-bold text-slate-700 hover:bg-slate-50">▤ Manage Orders</Link>
+            <Link to="/admin/reviews" className="rounded-xl border border-slate-100 p-4 text-sm font-bold text-slate-700 hover:bg-slate-50">★ Customer Reviews</Link>
             <Link to="/admin/staff" className="rounded-xl border border-slate-100 p-4 text-sm font-bold text-slate-700 hover:bg-slate-50">♙ View Staff</Link>
-            <Link to="/admin/profile" className="rounded-xl border border-slate-100 p-4 text-sm font-bold text-slate-700 hover:bg-slate-50">◎ Branch Profile</Link>
           </div>
         </Panel>
       </div>

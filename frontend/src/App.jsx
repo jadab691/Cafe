@@ -19,6 +19,7 @@ import AddFood from "./pages/admin/AddFood";
 import ManageOrders from "./pages/admin/ManageOrders";
 import ReviewNow from "./pages/admin/ReviewNow";
 import Staff from "./pages/admin/Staff";
+import Reviews from "./pages/admin/Reviews";
 import Profile from "./pages/admin/Profile";
 
 function About() {
@@ -61,6 +62,10 @@ function AppContent() {
         <Route path="/admin/manage-foods" element={<ManageFoods />} />
         <Route path="/admin/add-food" element={<AddFood />} />
         <Route path="/admin/staff" element={<Staff />} />
+        
+        {/* NEW REVIEWS ROUTE ADDED HERE */}
+        <Route path="/admin/reviews" element={<Reviews />} />
+        
         <Route path="/admin/profile" element={<Profile />} />
 
         {/* Keep old route working */}

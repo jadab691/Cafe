@@ -6,6 +6,7 @@ const navItems = [
   { label: "Orders", path: "/admin/orders", icon: "▤" },
   { label: "Menu", path: "/admin/manage-foods", icon: "⚒" },
   { label: "Staff", path: "/admin/staff", icon: "♙" },
+  { label: "Reviews", path: "/admin/reviews", icon: "★" },
 ];
 
 export default function AdminLayout({ children }) {
@@ -38,8 +39,8 @@ export default function AdminLayout({ children }) {
       </main>
 
       <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-200 bg-white/95 shadow-[0_-8px_24px_rgba(15,23,42,0.06)] backdrop-blur">
-        {/* Changed max-w-3xl to max-w-md to keep items grouped closer to center, and grid-cols-5 to grid-cols-4 */}
-        <div className="mx-auto grid max-w-md grid-cols-4 px-2 py-2">
+        {/* Updated to 5 columns and max-w-2xl for perfect centering of 5 items */}
+        <div className="mx-auto grid max-w-2xl grid-cols-5 px-2 py-2">
           {navItems.map((item) => (
             <NavLink key={item.path} to={item.path} className={() => `flex flex-col items-center gap-1 rounded-xl py-1.5 text-xs font-semibold transition ${active(item.path) ? "text-orange-800" : "text-slate-500 hover:text-orange-700"}`}>
               <span className="text-xl leading-6">{item.icon}</span>
