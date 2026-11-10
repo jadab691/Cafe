@@ -15,6 +15,22 @@ router.get("/", async (req, res) => {
     }
 });
 
+// GET one food for the admin edit form
+router.get("/:id", async (req, res) => {
+    try {
+        const food = await Food.findById(req.params.id);
+
+        if (!food) {
+            return res.status(404).json({ message: "Food not found" });
+        }
+
+        res.status(200).json({ food });
+    } catch (error) {
+        const status = error.name === "CastError" ? 400 : 500;
+        res.status(status).json({ message: error.message });
+    }
+});
+
 // POST - Add new food
 router.post("/", async (req, res) => {
     try {
@@ -22,17 +38,29 @@ router.post("/", async (req, res) => {
             name,
             category,
             price,
-            rating,
-            reviews,
             time,
             description,
             image,
-            ingredients,
+            badge,
         } = req.body;
 
-        if (!name || !category || !price || !time || !description || !image) {
+        if (
+            typeof name !== "string" ||
+            !name.trim() ||
+            typeof category !== "string" ||
+            !category.trim() ||
+            price === undefined ||
+            price === null ||
+            price === "" ||
+            typeof time !== "string" ||
+            !time.trim() ||
+            typeof description !== "string" ||
+            !description.trim() ||
+            typeof image !== "string" ||
+            !image.trim()
+        ) {
             return res.status(400).json({
-                message: "Please provide all required fields",
+                message: "Name, category, price, preparation time, description, and image are required.",
             });
         }
 
@@ -40,12 +68,10 @@ router.post("/", async (req, res) => {
             name,
             category,
             price,
-            rating,
-            reviews,
             time,
             description,
             image,
-            ingredients,
+            badge,
         });
 
         res.status(201).json({
@@ -53,16 +79,23 @@ router.post("/", async (req, res) => {
             food,
         });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        const status = error.name === "ValidationError" || error.name === "CastError" ? 400 : 500;
+        res.status(status).json({ message: error.message });
     }
 });
 
 // PUT - Update food
 router.put("/:id", async (req, res) => {
     try {
+        const { name, category, price, time, description, image, badge, available } = req.body;
+        const foodData = { name, category, price, time, description, image, badge, available };
+        Object.keys(foodData).forEach((key) => {
+            if (foodData[key] === undefined) delete foodData[key];
+        });
+
         const food = await Food.findByIdAndUpdate(
             req.params.id,
-            req.body,
+            foodData,
             {
                 new: true,
                 runValidators: true,
@@ -80,7 +113,8 @@ router.put("/:id", async (req, res) => {
             food,
         });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        const status = error.name === "ValidationError" || error.name === "CastError" ? 400 : 500;
+        res.status(status).json({ message: error.message });
     }
 });
 
@@ -99,7 +133,8 @@ router.delete("/:id", async (req, res) => {
             message: "Food deleted successfully",
         });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        const status = error.name === "ValidationError" || error.name === "CastError" ? 400 : 500;
+        res.status(status).json({ message: error.message });
     }
 });
 

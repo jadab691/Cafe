@@ -2,6 +2,10 @@
 
 This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
 
+## Food menu API
+
+The admin food form and customer menu use the backend `/api/foods` endpoints. By default, the frontend connects to `http://localhost:3000/api`; set `VITE_API_BASE_URL` to the backend API base URL when running the frontend against another environment. Start the backend with its MongoDB connection configured before adding or editing menu items.
+
 Currently, two official plugins are available:
 
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
