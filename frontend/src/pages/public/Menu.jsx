@@ -10,8 +10,8 @@ import {
   Star,
   Clock,
 } from "lucide-react";
+import { getFoods } from "../../services/foods";
 
-const API_URL = "http://localhost:3000/api/foods";
 const CART_KEY = "cafe-cart";
 
 function readCart() {
@@ -67,26 +67,24 @@ export default function Menu() {
         setLoading(true);
         setError("");
 
-        const response = await fetch(API_URL);
+        const data = await getFoods();
 
-        if (!response.ok) {
-          throw new Error("Failed to load foods.");
-        }
-
-        const data = await response.json();
-
-        const formattedFoods = (data.foods || []).map((food) => ({
-          ...food,
-          id: food._id,
-          rating: Number(food.rating || 0),
-          reviews: Number(food.reviews || 0),
-          price: Number(food.price || 0),
-          ingredients: food.ingredients || [],
-        }));
+        const formattedFoods = data
+          .filter((food) => food.available !== false)
+          .map((food) => ({
+            ...food,
+            id: food._id,
+            rating: Number(food.rating || 0),
+            reviews: Number(food.reviews || 0),
+            price: Number(food.price || 0),
+            ingredients: food.ingredients || [],
+            time: food.time || "",
+            badge: food.badge || "",
+          }));
 
         setFoods(formattedFoods);
-      } catch (error) {
-        setError(error.message || "Something went wrong.");
+      } catch (requestError) {
+        setError(requestError.message || "Something went wrong.");
       } finally {
         setLoading(false);
       }

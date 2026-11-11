@@ -10,6 +10,7 @@ const foodSchema = new mongoose.Schema(
         category: {
             type: String,
             required: true,
+            trim: true,
         },
         price: {
             type: Number,
@@ -27,14 +28,26 @@ const foodSchema = new mongoose.Schema(
         time: {
             type: String,
             required: true,
+            trim: true,
         },
         description: {
             type: String,
             required: true,
+            trim: true,
         },
         image: {
             type: String,
             required: true,
+            trim: true,
+        },
+        badge: {
+            type: String,
+            trim: true,
+            default: "",
+        },
+        available: {
+            type: Boolean,
+            default: true,
         },
         ingredients: {
             type: [String],
